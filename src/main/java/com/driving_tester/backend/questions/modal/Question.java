@@ -15,7 +15,10 @@ public class Question {
 
     @Id // Specifies the primary key of the entity
     @GeneratedValue(strategy = GenerationType.IDENTITY) // DB auto-generates this ID
-    private Long id; // Unique identifier for the question
+    private Long id; // Unique database ID
+
+    @Column(unique = true) // Ensures uniqueness of custom ID
+    private String customId; // Custom ID from CSV to identify the same question across languages
 
     private String imgUrl; // Optional image URL linked to the question
 
@@ -29,7 +32,7 @@ public class Question {
 
     public double getSuccessRate() {
         long total = attempts.size(); // Total attempts made on this question
-        long correct = attempts.stream().filter(QuestionAttempt::isCorrect).count(); // How many were correct
-        return total == 0 ? 0.0 : (double) correct / total; // Avoid division by 0
+        long correct = attempts.stream().filter(QuestionAttempt::isCorrect).count(); // Count correct attempts
+        return total == 0 ? 0.0 : (double) correct / total; // Return 0 if no attempts
     }
 }

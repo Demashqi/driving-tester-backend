@@ -15,11 +15,9 @@ public class QuestionTranslation {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment strategy for the primary key
     private Long id; // Unique identifier for this translation
 
-    private String language; // Language code, e.g., "en" for English or "ar" for Arabic
+    private String language; // Language code, e.g., "en" or "ar"
 
-    private String category; // Translated category name (e.g., "Traffic Signs", "العلامات المرورية")
-
-    private String questionText; // The actual question in the specified language
+    private String questionText; // Question content in this language
 
     private String option1; // Option A
     private String option2; // Option B
@@ -28,8 +26,10 @@ public class QuestionTranslation {
 
     private String answer; // Correct answer text
 
-    @Column(length = 1000) // Adjust length as per your requirement
-    private String explanation; // Explanation for why the answer is correct
+    @Column(length = 1000) // Adjust length as needed
+    private String explanation; // Explanation for the answer
+
+    private String category; // Category of the question (in the selected language)
 
     @ManyToOne // Many translations belong to one base Question
     @JoinColumn(name = "question_id") // FK to the Question table
