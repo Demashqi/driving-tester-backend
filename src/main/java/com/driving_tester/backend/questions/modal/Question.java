@@ -22,10 +22,12 @@ public class Question {
 
     private String imgUrl; // Optional image URL linked to the question
 
+    @Builder.Default
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     // One question has many translations (EN, AR, etc.)
     private List<QuestionTranslation> translations = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     // Tracks all attempts on this question by users
     private List<QuestionAttempt> attempts = new ArrayList<>();

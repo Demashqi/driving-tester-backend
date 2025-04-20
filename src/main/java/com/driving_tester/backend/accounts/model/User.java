@@ -8,13 +8,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.driving_tester.backend.questions.modal.Question;
 import com.driving_tester.backend.questions.modal.QuestionAttempt;
 
 import java.util.List; // List of attempts per user
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -45,8 +48,18 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     // A user can have many attempts
     private List<QuestionAttempt> attempts = new ArrayList<>();
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+        name = "user_saved_questions",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "question_id")
+    )
+    private Set<Question> savedQuestions = new HashSet<>();
+
 }
