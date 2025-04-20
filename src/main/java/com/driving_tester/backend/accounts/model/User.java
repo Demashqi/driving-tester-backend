@@ -7,9 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.driving_tester.backend.questions.modal.QuestionAttempt;
+
+import java.util.List; // List of attempts per user
 
 @Entity
 @Table(name = "users")
@@ -39,4 +44,9 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    // A user can have many attempts
+    private List<QuestionAttempt> attempts = new ArrayList<>();
 }
