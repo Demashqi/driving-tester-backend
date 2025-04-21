@@ -35,12 +35,13 @@ public class MixedCategoryQuizController {
     // POST: Record that the user attempted a specific question using customId
     @PostMapping("/attempt")
     public ResponseEntity<String> recordAttempt(
-            @RequestParam String customId, // changed from Long questionId
+            @RequestParam Long questionId, // Use Long questionId instead of customId
             @RequestParam boolean correct,
             Principal principal
     ) {
-        quizService.saveAttempt(principal.getName(), customId, correct);
+        quizService.saveAttempt(principal.getName(), questionId, correct); // Pass questionId instead of customId
         return ResponseEntity.ok("Attempt recorded");
     }
+    
 
 }

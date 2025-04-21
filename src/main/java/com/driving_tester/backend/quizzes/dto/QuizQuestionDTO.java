@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // Generates an all-args constructor
 public class QuizQuestionDTO {
 
-    private String customId; // Unique identifier consistent across languages
+    private Long id; // Use the actual question id
 
     private String language;
     private String questionText;
@@ -22,20 +22,20 @@ public class QuizQuestionDTO {
     private String answer;
     private String explanation;
     private String category;
-    private String imgUrl; // From the parent Question entity
+    private String imgUrl;
 
     // Custom constructor to build DTO using translation and parent question
     public QuizQuestionDTO(QuestionTranslation t, Question parentQuestion) {
-        this.customId = parentQuestion.getCustomId(); // Grab custom ID from parent
-        this.language = t.getLanguage(); // Set translation language
-        this.questionText = t.getQuestionText(); // Localized question
+        this.id = parentQuestion.getId(); // Grab the actual question ID
+        this.language = t.getLanguage();
+        this.questionText = t.getQuestionText();
         this.option1 = t.getOption1();
         this.option2 = t.getOption2();
         this.option3 = t.getOption3();
         this.option4 = t.getOption4();
-        this.answer = t.getAnswer(); // Localized correct answer
-        this.explanation = t.getExplanation(); // Localized explanation
-        this.category = t.getCategory(); // Localized category
-        this.imgUrl = parentQuestion.getImgUrl(); // Image from parent question
+        this.answer = t.getAnswer();
+        this.explanation = t.getExplanation();
+        this.category = t.getCategory();
+        this.imgUrl = parentQuestion.getImgUrl();
     }
 }

@@ -15,4 +15,5 @@ public interface QuestionAttemptRepository extends JpaRepository<QuestionAttempt
 
      // Find an existing attempt by user and question
      Optional<QuestionAttempt> findByUserAndQuestion(User user, Question question);
+
 }

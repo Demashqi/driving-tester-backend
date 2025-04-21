@@ -26,38 +26,37 @@ public class MixedCategoryQuizService {
     // Fetches 'count' translated questions, prioritizing unattempted ones
     public List<QuizQuestionDTO> getQuizTranslations(String email, int count, String language) {
         User user = userRepository.findByEmail(email).orElseThrow();
-
+    
         List<Question> allQuestions = questionRepository.findAll();
-
+    
         // Get IDs of already attempted questions
         Set<Long> attemptedIds = user.getAttempts().stream()
-                .map(a -> a.getQuestion().getId())
+                .map(a -> a.getQuestion().getId()) // Use getId() instead of customId
                 .collect(Collectors.toSet());
-
+    
         // Filter unattempted questions
         List<Question> unattempted = allQuestions.stream()
                 .filter(q -> !attemptedIds.contains(q.getId()))
                 .collect(Collectors.toList());
-
+    
         // Shuffle for randomness
         Collections.shuffle(unattempted);
-
-        // Start building the result
+    
         List<Question> result = new ArrayList<>();
-
+    
         // Add as many unattempted as we can
         for (Question q : unattempted) {
             if (result.size() >= count) break;
             result.add(q);
         }
-
+    
         // If we still need more, fetch least-attempted questions
         if (result.size() < count) {
             List<Question> attemptedSorted = allQuestions.stream()
                     .filter(q -> attemptedIds.contains(q.getId()))
                     .sorted(Comparator.comparingInt(q -> getUserAttemptCount(user, q)))
                     .collect(Collectors.toList());
-
+    
             for (Question q : attemptedSorted) {
                 if (result.size() >= count) break;
                 if (!result.contains(q)) {
@@ -65,8 +64,8 @@ public class MixedCategoryQuizService {
                 }
             }
         }
-
-        // Map to DTOs and include customId + image
+    
+        // Map to DTOs and include questionId + image
         return result.stream()
                 .map(question ->
                         question.getTranslations().stream()
@@ -79,28 +78,30 @@ public class MixedCategoryQuizService {
                 .limit(count) // Just to be safe: ensure final list doesn't exceed count
                 .collect(Collectors.toList());
     }
+    
 
-    // Get how many times a user attempted a specific question using customId
+    // Get how many times a user attempted a specific question using questionId
     private int getUserAttemptCount(User user, Question question) {
-        String customId = question.getCustomId();
+        Long questionId = question.getId(); // Use questionId instead of customId
         return user.getAttempts().stream()
-                .filter(a -> a.getQuestion().getCustomId().equals(customId))
+                .filter(a -> a.getQuestion().getId().equals(questionId)) // Match based on questionId
                 .mapToInt(QuestionAttempt::getAttemptCount)
                 .sum();
     }
 
 
+
     // Save or update an attempt using customId (language-independent tracking)
-    public void saveAttempt(String email, String customId, boolean correct) {
+    public void saveAttempt(String email, Long questionId, boolean correct) {
         User user = userRepository.findByEmail(email).orElseThrow();
-
-        // Find the question by customId instead of numeric ID
-        Question question = questionRepository.findByCustomId(customId)
-                .orElseThrow(() -> new RuntimeException("Question not found for customId: " + customId));
-
+    
+        // Find the question by questionId
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new RuntimeException("Question not found for questionId: " + questionId));
+    
         // Check if an attempt already exists
         Optional<QuestionAttempt> existing = attemptRepository.findByUserAndQuestion(user, question);
-
+    
         if (existing.isPresent()) {
             QuestionAttempt attempt = existing.get();
             attempt.setAttemptCount(attempt.getAttemptCount() + 1);
@@ -118,4 +119,5 @@ public class MixedCategoryQuizService {
             attemptRepository.save(attempt);
         }
     }
+    
 }
