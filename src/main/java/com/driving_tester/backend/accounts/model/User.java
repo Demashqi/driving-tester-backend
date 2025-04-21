@@ -53,13 +53,4 @@ public class User {
     // A user can have many attempts
     private List<QuestionAttempt> attempts = new ArrayList<>();
 
-    @Builder.Default
-    @ManyToMany
-    @JoinTable(
-        name = "user_saved_questions",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "question_id")
-    )
-    private Set<Question> savedQuestions = new HashSet<>();
-
 }

@@ -4,14 +4,12 @@ import com.driving_tester.backend.accounts.model.User;
 import com.driving_tester.backend.accounts.repository.UserRepository;
 import com.driving_tester.backend.questions.modal.Question;
 import com.driving_tester.backend.questions.modal.QuestionAttempt;
-import com.driving_tester.backend.questions.repository.QuestionAttemptRepository;
 import com.driving_tester.backend.questions.repository.QuestionRepository;
 import com.driving_tester.backend.quizzes.dto.QuizQuestionDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,7 +18,6 @@ import java.util.stream.Collectors;
 public class MixedCategoryQuizService {
 
     private final QuestionRepository questionRepository;
-    private final QuestionAttemptRepository attemptRepository;
     private final UserRepository userRepository;
 
     // Fetches 'count' translated questions, prioritizing unattempted ones
@@ -87,37 +84,6 @@ public class MixedCategoryQuizService {
                 .filter(a -> a.getQuestion().getId().equals(questionId)) // Match based on questionId
                 .mapToInt(QuestionAttempt::getAttemptCount)
                 .sum();
-    }
-
-
-
-    // Save or update an attempt using customId (language-independent tracking)
-    public void saveAttempt(String email, Long questionId, boolean correct) {
-        User user = userRepository.findByEmail(email).orElseThrow();
-    
-        // Find the question by questionId
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new RuntimeException("Question not found for questionId: " + questionId));
-    
-        // Check if an attempt already exists
-        Optional<QuestionAttempt> existing = attemptRepository.findByUserAndQuestion(user, question);
-    
-        if (existing.isPresent()) {
-            QuestionAttempt attempt = existing.get();
-            attempt.setAttemptCount(attempt.getAttemptCount() + 1);
-            attempt.setCorrect(correct);
-            attempt.setAttemptedAt(LocalDateTime.now());
-            attemptRepository.save(attempt);
-        } else {
-            QuestionAttempt attempt = QuestionAttempt.builder()
-                    .user(user)
-                    .question(question)
-                    .correct(correct)
-                    .attemptCount(1)
-                    .attemptedAt(LocalDateTime.now())
-                    .build();
-            attemptRepository.save(attempt);
-        }
     }
     
 }
