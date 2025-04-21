@@ -5,6 +5,8 @@ import lombok.*; // Import Lombok annotations to reduce boilerplate code
 import java.util.ArrayList; // ArrayList used to initialize lists
 import java.util.List; // List interface for collections
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity // Marks this class as a JPA entity to map to a DB table
 @Getter // Lombok: auto-generates all getters
 @Setter // Lombok: auto-generates all setters
@@ -24,6 +26,7 @@ public class Question {
 
     @Builder.Default
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // prevents infinite nesting
     // One question has many translations (EN, AR, etc.)
     private List<QuestionTranslation> translations = new ArrayList<>();
 

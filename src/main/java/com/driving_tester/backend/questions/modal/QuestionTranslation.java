@@ -1,5 +1,7 @@
 package com.driving_tester.backend.questions.modal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*; // JPA annotations for database entity mapping
 import lombok.*; // Lombok to eliminate boilerplate code
 
@@ -33,5 +35,6 @@ public class QuestionTranslation {
 
     @ManyToOne // Many translations belong to one base Question
     @JoinColumn(name = "question_id") // FK to the Question table
+    @JsonBackReference // prevents back-reference infinite recursion
     private Question question; // Parent question reference
 }
