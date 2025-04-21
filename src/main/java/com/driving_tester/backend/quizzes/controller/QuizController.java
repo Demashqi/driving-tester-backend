@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController // This class handles REST API calls
 @RequestMapping("/api/quizzes/") // Base URL for this quiz type
@@ -35,6 +36,12 @@ public class QuizController {
     ) {
         return quizService.getQuestionByIdAndLanguage(id, language);
     }
+
+    @GetMapping("/questions")
+    public List<QuizQuestionDTO> getAllQuestions(@RequestParam String language) {
+        return quizService.getAllQuestionsByLanguage(language);
+    }
+
     
 
 }

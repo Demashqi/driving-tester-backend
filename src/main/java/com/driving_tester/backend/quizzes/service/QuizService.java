@@ -1,7 +1,10 @@
 package com.driving_tester.backend.quizzes.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -79,5 +82,21 @@ public class QuizService {
                 question.getImgUrl()
         )).orElseThrow(() -> new RuntimeException("Translation not found for language: " + language));
     }
+
+    public List<QuizQuestionDTO> getAllQuestionsByLanguage(String language) {
+        List<Question> allQuestions = questionRepository.findAll();
+
+        return allQuestions.stream()
+                .map(question ->
+                    question.getTranslations().stream()
+                            .filter(t -> t.getLanguage().equalsIgnoreCase(language))
+                            .findFirst()
+                            .map(t -> new QuizQuestionDTO(t, question)) // Combine translation + base question
+                            .orElse(null)
+                )
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
 
 }
