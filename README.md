@@ -16,9 +16,9 @@ This is the backend system for the **Driving Tester** web application, built wit
 - 🧠 Quiz System with Category & Language Filters
 - 💾 Save & Unsave Questions (Bookmarks)
 - 📊 Track Attempt History per User
-- 🌐 Multi-language Question Translations (Arabic, English, etc.)
+- 🌐 Multi-language Question Translations (Arabic, English, more languages yet to be added.)
 - 📷 Image Support for Questions
-- 🔐 JWT-based Auth (can be added if needed)
+- 🔐 JWT-based Auth
 
 ---
 
@@ -30,8 +30,6 @@ This is the backend system for the **Driving Tester** web application, built wit
 - **MySQL** (Database)
 - **Lombok** (Boilerplate reduction)
 - **Postman** (API Testing)
-- **Docker** (Optional for containerized deployment)
-
 ---
 
 ## 🚀 Getting Started
@@ -97,8 +95,6 @@ src
 ├── accounts         → User entity, auth, repository
 ├── questions        → Question, translation, attempts
 ├── quizzes          → Quiz logic, saved questions
-├── controller       → API endpoints (REST Controllers)
-├── dto              → DTOs for question delivery
 └── application.properties
 ```
 
@@ -108,11 +104,11 @@ src
 
 | Method | Endpoint                         | Description                       |
 |--------|----------------------------------|-----------------------------------|
-| GET    | `/api/questions/all`             | Get all questions (translated)    |
-| GET    | `/api/questions/{id}`            | Get single question by ID         |
-| POST   | `/api/saved/toggle/{questionId}` | Save or unsave question           |
-| GET    | `/api/saved/all`                 | Get all saved questions (user)    |
-| GET    | `/api/saved/{id}`                | Get saved question by ID          |
+| GET    | `/api/quizzes/questions/all`             | Get all questions (translated)    |
+| GET    | `/api/quizzes/questions/{id}`            | Get single question by ID         |
+| POST   | `/api/quizzes/saved/toggle/{questionId}` | Save or unsave question           |
+| GET    | `/api/quizzes/saved/all`                 | Get all saved questions (user)    |
+| GET    | `/api/quizzes/saved/{id}`                | Get saved question by ID          |
 
 Use Postman for the full set of routes and examples.
 
